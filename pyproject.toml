@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dagzip"
+version = "0.1.0"
+description = "A DAG-based file archiver with content-defined chunking, deduplication, and encryption."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    # Core CLI and system logic
+    "click>=8.1.7",           # For building a robust CLI
+    "rich>=13.7.1",           # For beautiful terminal UI, art, and progress spinners
+    "zstandard>=0.22.0",      # High-performance compression (Zstd is ideal for deduplicated chunks)
+    "cryptography>=42.0.0",   # Robust encryption (AES-GCM)
+    "msgpack>=1.0.8",         # Extremely fast binary serialization for our DAG manifests
+    
+    # Optional/Specialized features
+    "fastapi>=0.110.0",       # For the remote DAG access server
+    "uvicorn>=0.29.0",        # ASGI server for FastAPI
+    "PyQt6>=6.6.1",           # For the GUI
+    "networkx>=3.2.1",        # Helpful for DAG visualization/manipulation in the GUI
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "black>=24.2.0",
+    "mypy>=1.9.0",
+    "ruff>=0.3.2",
+]
+
+[project.scripts]
+dagzip = "dagzip.cli:cli"
+dagzip-gui = "gui.main_window:main"
+dagzip-server = "dagzip.server:run_server"
+
+[tool.setuptools.packages.find]
+include = ["dagzip*", "gui*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
